@@ -33,17 +33,14 @@ class Contacts extends Component
         $this->contacts = Contact::all()->toArray();
     }
 
-    // public function add($i) 
-    // {
-    //     $i = $i + 1;
-    //     $this->i = $i;
-    //     array_push($this->inputs ,$i);
-    // }
-
-    // public function remove($i)
-    // {
-    //     unset($this->inputs[$i]);
-    // }
+    private function resetCreateForm(){
+        $this->title = '';
+        $this->content = '';
+    }
+    public function create(){
+        $this->resetCreateForm();
+        $this->openModal();
+    }
 
     public function render()
     {
@@ -107,6 +104,8 @@ class Contacts extends Component
             'content' => $this->content,
         ]);
         session()->flash('message', $this->postId ? 'Data updated successfully.' : 'Data added successfully.');
+        // $this->closeModal();
+        $this->resetCreateForm();
 
         }
         public function delete($id){

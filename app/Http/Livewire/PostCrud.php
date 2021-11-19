@@ -14,7 +14,7 @@ class PostCrud extends Component
     public $inputs = [];
     public $i = 1;
     
-    
+     
    
     public function render()
     {
