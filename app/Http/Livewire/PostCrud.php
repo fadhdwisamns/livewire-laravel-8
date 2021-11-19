@@ -19,6 +19,7 @@ class PostCrud extends Component
     public function render()
     {
         $this->posts = Post::all();
+        // dd($this->posts);
         return view('livewire.post-crud');
     }
     public function create(){
@@ -35,43 +36,48 @@ class PostCrud extends Component
         $this->title = '';
         $this->content = '';
     }
+    public function remove($i)
+    {
+        unset($this->inputs[$i]);
+        session()->flash('message', 'Data Has Been Deleted Successfully.');
+    }
     public function store(){
-    //     $validateDate = $this->validate([
-    //         'title.0' => 'required',
-    //         'content.0' => 'required',
-    //         'title.*' => 'required',
-    //         'content.*' => 'required',
+        $validateDate = $this->validate([
+            'title.0' => 'required',
+            'content.0' => 'required',
+            'title.*' => 'required',
+            'content.*' => 'required',
 
-    //     ],
-    //     [
-    //         'title.0.required' => 'name field is required',
-    //         'content.0.required' => 'name field is required',
-    //         'title.*.required' => 'ma,e field is required',
-    //         'content.*.required' => 'name field is required',
-    //     ]
+        ],
+        [
+            'title.0.required' => 'name field is required',
+            'content.0.required' => 'name field is required',
+            'title.*.required' => 'ma,e field is required',
+            'content.*.required' => 'name field is required',
+        ]
     
-    // );
-    // foreach ($this->title as $key => $value) {
-    //     Contact::create(['title' => $this->title[$key], 'content' => $this->content[$key]]);
-    // }
+    );
+    
+    foreach ($this->title as $key => $value) {
+        Post::create(['title' => $this->title[$key], 'content' => $this->content[$key]]);
+    }
+    $this->inputs = [];
 
-    // $this->inputs = [];
+    $this->resetCreateForm();
 
-    // $this->resetInputFields();
+    session()->flash('message', 'Data Has Been Created Successfully.');
+        // $this->validate([
+        //     'title' => 'required',
+        //     'content' => 'required',
+        // ]);
+        // Post::updateOrCreate(['id' => $this->postId], [
+        //     'title' => $this->title,
+        //     'content' => $this->content,
+        // ]);
+        // session()->flash('message', $this->postId ? 'Data updated successfully.' : 'Data added successfully.');
 
-    // session()->flash('message', 'Data Has Been Created Successfully.');
-        $this->validate([
-            'title' => 'required',
-            'content' => 'required',
-        ]);
-        Post::updateOrCreate(['id' => $this->postId], [
-            'title' => $this->title,
-            'content' => $this->content,
-        ]);
-        session()->flash('message', $this->postId ? 'Data updated successfully.' : 'Data added successfully.');
-
-        $this->closeModal();
-        $this->resetCreateForm();
+        // $this->closeModal();
+        // $this->resetCreateForm();
     }
     public function update(){
         $this->validate([
@@ -85,6 +91,15 @@ class PostCrud extends Component
                 $this->title = $post->title,
                 $this->content = $post->content
             ]);
+            foreach($this->title as $key => $value){
+                Post::create([
+                    'title' => $this->title[$key], 
+                    'content' => $this->content[$key],
+                ]);
+                $this->inputs = [];
+
+                $this->resetCreateForm();
+            }
             session()->flash('message', 'Data Update successfully.');
     }
     public function add($i){
@@ -99,7 +114,7 @@ class PostCrud extends Component
         $this->title = $post->title;
         $this->content = $post->content;
 
-        
+        $this->openModal();
     }
     public function delete($id){
         Post::find($id)->delete();

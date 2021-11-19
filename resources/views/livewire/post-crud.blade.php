@@ -28,25 +28,32 @@
                 <tbody>
                     <tr wire:ignore>
                 <td  class="border px-4 py-2">
-                        <input type='text' name='title' wire:model='title' class='form-control' placeholder='Enter Title'>
+                <input type="text" class="form-control" placeholder="Enter Title" wire:model="title.0">
+                        @error('title.0') <span class="text-danger error">{{ $message }}</span>@enderror
+                    
                                             </td>
                     <td class="border px-4 py-2">
-                        <input type='text' wire:model='content' name='content' class='form-control' placeholder='Enter Content'>
-                                            </td>
+                    <input type="email" class="form-control" wire:model="content.0" placeholder="Enter Content ">
+                        @error('content.0') <span class="text-danger error">{{ $message }}</span>@enderror
+                         </td>
                     <td class="border px-4 py-2">
                         <button wire:click='store' class="bg-blue-500  font-bold py-2 px-4 rounded">Save</button>
                     </td> 
                 </tr>
-                    @foreach($posts as $post)
+                @foreach($posts as $key => $value)
                     <tr>
                         <td class="border px-4 py-2">
-                            <input type='text' name='title'  value="{{ $post->title }}"class='form-control' placeholder='Enter Title'></td>
-                        <td class="border px-4 py-2">{{ $post->content}}</td>
+                        <input type="text" class="form-control" placeholder="Enter Title" wire:model="title.{{ $value }}"  >
+                            @error('title.'.$value) <span class="text-danger error">{{ $message }}</span>@enderror
+                        </td>
                         <td class="border px-4 py-2">
-                            <button wire:click="update"
+                        <input type="text" class="form-control" wire:model="content.{{ $value }}" placeholder="Enter Content" >
+                            @error('content.'.$value) <span class="text-danger error">{{ $message }}</span>@enderror
+                        </td>
+                        <td class="border px-4 py-2">
+                            <button wire:click="store"
                                 class="bg-blue-500   font-bold py-2 px-4 rounded">Save</button>
-                            <button wire:click="delete({{ $post->id }})"
-                                class="bg-red-500 hover:bg-red-700  font-bold py-2 px-4 rounded">Delete</button>
+                                <button class="btn btn-danger btn-sm" wire:click.prevent="remove({{$key}})">DELETE</button>
                         </td>
                     </tr>
                     @endforeach
